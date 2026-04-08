@@ -1,6 +1,6 @@
 package com.openwebinars.todo.service;
 
-import com.openwebinars.todo.dto.EditTaskDto;
+import com.openwebinars.todo.dto.TaskUpdateRequestDto;
 import com.openwebinars.todo.error.TaskNotFoundException;
 import com.openwebinars.todo.model.Task;
 import com.openwebinars.todo.repos.TaskRepository;
@@ -40,24 +40,24 @@ public class TaskService {
                 .orElseThrow(()-> new TaskNotFoundException(id));
     }
 
-    public Task save(EditTaskDto cmd, User author) {
+    public Task save(TaskUpdateRequestDto editTaskCommand, User author) {
         return taskRepository.save(
                 Task.builder()
-                        .title(cmd.title())
-                        .description(cmd.description())
-                        .deadline(cmd.deadline())
+                        .title(editTaskCommand.title())
+                        .description(editTaskCommand.description())
+                        .deadline(editTaskCommand.deadline())
                         .author(author)
                         .build()
         );
     }
 
-    public Task edit(EditTaskDto cmd, Long id) {
+    public Task edit(TaskUpdateRequestDto editTaskCommand, Long id) {
         return taskRepository.findById(id)
-                .map(t -> {
-                    t.setTitle(cmd.title());
-                    t.setDescription(cmd.description());
-                    t.setDeadline(cmd.deadline());
-                    return taskRepository.save(t);
+                .map(task -> {
+                    task.setTitle(editTaskCommand.title());
+                    task.setDescription(editTaskCommand.description());
+                    task.setDeadline(editTaskCommand.deadline());
+                    return taskRepository.save(task);
                 })
                 .orElseThrow(()-> new TaskNotFoundException(id));
     }

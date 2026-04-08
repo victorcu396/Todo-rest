@@ -9,7 +9,7 @@ INSERT INTO task (created_at, deadline, id, title, description) VALUES (CURRENT_
 INSERT INTO task (created_at, deadline, id, title, description) VALUES (CURRENT_TIMESTAMP, TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP), NEXTVAL('task_seq'), 'Comprar regalos', 'Buscar ideas para los regalos de cumpleaños de la familia.');
 INSERT INTO task (created_at, deadline, id, title, description) VALUES (CURRENT_TIMESTAMP, TIMESTAMPADD(DAY, 15, CURRENT_TIMESTAMP), NEXTVAL('task_seq'), 'Planificar vacaciones', 'Investigar destinos turísticos y elaborar un presupuesto para el viaje.');
 
-INSERT INTO user_entity (id, email, username, password, is_admin) VALUES (NEXTVAL('user_entity_seq'), 'pepe@openwebinars.net','pepe','{noop}12345',false);
+INSERT INTO user_entity (id, email, username, password, is_admin) VALUES (NEXTVAL('user_entity_seq'), 'testuser@example.com','testuser','{noop}password123',false);
 
 UPDATE task SET author_id = CURRVAL('user_entity_seq');
 

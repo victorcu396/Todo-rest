@@ -19,7 +19,7 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
     public ProblemDetail handleProductNotFound(TaskNotFoundException ex) {
         ProblemDetail result = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         result.setTitle("Tarea no encontrada");
-        result.setType(URI.create("https://www.openwebinars.net/errors/task-not-found"));
+        result.setType(URI.create("https://api.taskapi.example.com/errors/task-not-found"));
         return result;
     }
 
@@ -28,7 +28,7 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
     public ProblemDetail handleAuthException(AuthenticationException ex) {
         ProblemDetail result = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
         result.setTitle("Error de autenticación");
-        result.setType(URI.create("https://www.openwebinars.net/errors/authentication"));
+        result.setType(URI.create("https://api.taskapi.example.com/errors/authentication"));
         return result;
     }
 
@@ -37,7 +37,7 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
     public ProblemDetail handleAccessDeniedException(AccessDeniedException ex) {
         ProblemDetail result = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
         result.setTitle("Error de autorización");
-        result.setType(URI.create("https://www.openwebinars.net/errors/authorization"));
+        result.setType(URI.create("https://api.taskapi.example.com/errors/authorization"));
         return result;
     }
 

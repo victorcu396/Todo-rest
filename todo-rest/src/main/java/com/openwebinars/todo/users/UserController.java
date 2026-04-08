@@ -14,9 +14,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/auth/register")
-    public ResponseEntity<NewUserResponse> createUser(@RequestBody NewUserCommand cmd) {
+    public ResponseEntity<UserRegistrationResponseDto> createUser(@RequestBody CreateUserRequestDto createUserRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(NewUserResponse.of(userService.register(cmd)));
+                .body(UserRegistrationResponseDto.toDto(userService.register(createUserRequest)));
     }
 
 }

@@ -8,11 +8,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenAPIDefinition(info =
-@Info(description = "Una API REST sobre tareas",
+@Info(description = "Una API REST para gestionar tareas personales",
 		version = "1.0",
-		contact = @Contact(email = "luismi@openwebinars.net", name = "Luismi"),
-		license = @License(name = "CC BY"),
-		title = "API sobre tareas"
+		contact = @Contact(email = "admin@taskapi.example.com", name = "Task API Team"),
+		license = @License(name = "MIT"),
+		title = "API REST de Gestión de Tareas"
 )
 )
 @SpringBootApplication

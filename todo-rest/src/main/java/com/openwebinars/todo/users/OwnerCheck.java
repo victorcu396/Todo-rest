@@ -1,6 +1,5 @@
 package com.openwebinars.todo.users;
 
-import com.openwebinars.todo.dto.GetTaskDto;
 import com.openwebinars.todo.model.Task;
 import com.openwebinars.todo.repos.TaskRepository;
 import lombok.RequiredArgsConstructor;

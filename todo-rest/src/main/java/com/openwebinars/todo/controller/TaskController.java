@@ -1,7 +1,7 @@
 package com.openwebinars.todo.controller;
 
-import com.openwebinars.todo.dto.EditTaskDto;
-import com.openwebinars.todo.dto.GetTaskDto;
+import com.openwebinars.todo.dto.TaskUpdateRequestDto;
+import com.openwebinars.todo.dto.TaskResponseDto;
 import com.openwebinars.todo.service.TaskService;
 import com.openwebinars.todo.users.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +37,7 @@ public class TaskController {
             responseCode = "200",
             content = @Content(
                     mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = GetTaskDto.class)),
+                    array = @ArraySchema(schema = @Schema(implementation = TaskResponseDto.class)),
                     examples = {
                             @ExampleObject("""
                                     [
@@ -49,8 +49,8 @@ public class TaskController {
                                              "deadline": "2025-01-20T16:12:11.295172",
                                              "author": {
                                                  "id": 1,
-                                                 "username": "pepe",
-                                                 "email": "pepe@openwebinars.net"
+                                                 "username": "testuser",
+                                                 "email": "testuser@example.com"
                                              }
                                          },
                                          {
@@ -61,8 +61,8 @@ public class TaskController {
                                              "deadline": "2025-01-15T16:12:11.296628",
                                              "author": {
                                                    "id": 1,
-                                                   "username": "pepe",
-                                                   "email": "pepe@openwebinars.net"
+                                                   "username": "testuser",
+                                                   "email": "testuser@example.com"
                                              }
                                          }
                                     ]
@@ -71,11 +71,11 @@ public class TaskController {
             )
     )
     @GetMapping
-    public List<GetTaskDto> getAll(@AuthenticationPrincipal User author) {
+    public List<TaskResponseDto> getAllTasks(@AuthenticationPrincipal User authenticatedUser) {
         //return taskService.findAll()
-        return taskService.findByAuthor(author)
+        return taskService.findByAuthor(authenticatedUser)
                 .stream()
-                .map(GetTaskDto::of)
+                .map(TaskResponseDto::toDto)
                 .toList();
     }
 
@@ -87,7 +87,7 @@ public class TaskController {
             responseCode = "200",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = GetTaskDto.class),
+                    schema = @Schema(implementation = TaskResponseDto.class),
                     examples = {
                             @ExampleObject("""
                                     {
@@ -108,8 +108,8 @@ public class TaskController {
     )
     @PostAuthorize("returnObject.author.username == authentication.principal.username")
     @GetMapping("/{id}")
-    public GetTaskDto getById(@PathVariable Long id) {
-        return GetTaskDto.of(taskService.findById(id));
+    public TaskResponseDto getById(@PathVariable Long id) {
+        return TaskResponseDto.toDto(taskService.findById(id));
 
     }
 
@@ -121,7 +121,7 @@ public class TaskController {
             responseCode = "201",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = GetTaskDto.class),
+                    schema = @Schema(implementation = TaskResponseDto.class),
                     examples = {
                             @ExampleObject("""
                                     {
@@ -141,11 +141,11 @@ public class TaskController {
             )
     )
     @PostMapping
-    public ResponseEntity<GetTaskDto> create(
+    public ResponseEntity<TaskResponseDto> create(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Tarea a crear", required = true,
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = EditTaskDto.class),
+                            schema = @Schema(implementation = TaskUpdateRequestDto.class),
                             examples = @ExampleObject("""
                                     {
                                          "title": "Aprender Spring Boot",
@@ -155,10 +155,10 @@ public class TaskController {
                                 """)
                     )
             )
-            @RequestBody EditTaskDto cmd,
-            @AuthenticationPrincipal User author) {
+            @RequestBody TaskUpdateRequestDto editTaskCommand,
+            @AuthenticationPrincipal User authenticatedUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                GetTaskDto.of(taskService.save(cmd, author))
+                TaskResponseDto.toDto(taskService.save(editTaskCommand, authenticatedUser))
         );
     }
 
@@ -171,7 +171,7 @@ public class TaskController {
             responseCode = "200",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = GetTaskDto.class),
+                    schema = @Schema(implementation = TaskResponseDto.class),
                     examples = {
                             @ExampleObject("""
                                     {
@@ -194,11 +194,11 @@ public class TaskController {
             @ownerCheck.check(#id, authentication.principal.getId())
             """)
     @PutMapping("/{id}")
-    public GetTaskDto edit(
+    public TaskResponseDto edit(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos a editar en la tarea", required = true,
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = EditTaskDto.class),
+                            schema = @Schema(implementation = TaskUpdateRequestDto.class),
                             examples = @ExampleObject("""
                                     {
                                          "title": "Aprender Spring Boot",
@@ -208,9 +208,9 @@ public class TaskController {
                                 """)
                     )
             )
-            @RequestBody EditTaskDto cmd,
+            @RequestBody TaskUpdateRequestDto editTaskCommand,
             @PathVariable Long id) {
-        return GetTaskDto.of(taskService.edit(cmd, id));
+        return TaskResponseDto.toDto(taskService.edit(editTaskCommand, id));
     }
 
     @Operation(
